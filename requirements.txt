@@ -1,7 +1,7 @@
 streamlit
 pdfplumber
-pdf2image
-pytesseract
 openpyxl
 reportlab
-Pillow
+gspread
+google-auth
+google-auth-oauthlib

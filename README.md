@@ -1,33 +1,30 @@
-# Reporte de Asociadas Betterware
+# Reportes Asociadas
 
-App privada en Streamlit para procesar PDFs CTBT Betterware, generar Excel/PDF y crear Google Sheets.
+App Streamlit para procesar reportes de asociadas Betterware, generar Excel/PDF y crear Google Sheets.
 
-## Archivos que sí van a GitHub
+## Archivos importantes
+
+Subir a GitHub:
 - app.py
 - requirements.txt
 - README.md
-- .gitignore
-- logo.png, si tienes uno
+- .streamlit/config.toml
+- logo.png si lo tienes
 
-## Archivos que NO van a GitHub
+No subir a GitHub:
 - .env
 - token.json
 - credentials.json
 - .streamlit/secrets.toml
 
-## Secrets necesarios en Streamlit Cloud
-Configura estos valores en App > Settings > Secrets:
+## Secrets requeridos en Streamlit Cloud
 
-```toml
-CLAVE_APP="tu_contraseña_privada"
-ANTHROPIC_API_KEY="tu_clave_de_claude"
-GEMINI_API_KEY="tu_clave_de_gemini"
-
-GOOGLE_CREDENTIALS_JSON = """
-contenido completo de credentials.json
+CLAVE_APP="tu_contraseña"
+ANTHROPIC_API_KEY="tu_api_key"
+GEMINI_API_KEY="tu_api_key"
+GOOGLE_CREDENTIALS_JSON="""
+{...}
 """
-
-GOOGLE_TOKEN_JSON = """
-contenido completo de token.json
+GOOGLE_TOKEN_JSON="""
+{...}
 """
-```

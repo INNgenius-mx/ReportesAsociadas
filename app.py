@@ -963,7 +963,7 @@ def _validar_acceso():
         }
 
         /* Botón de entrar */
-        div[data-testid="stFormSubmitButton"] button {
+        div[data-testid="stButton"] button {
             background: #702080 !important;
             color: #ffffff !important;
             font-weight: 800 !important;
@@ -973,10 +973,10 @@ def _validar_acceso():
             margin-top: 8px !important;
             box-shadow: 0 10px 22px rgba(112, 32, 128, .18);
         }
-        div[data-testid="stFormSubmitButton"] button:hover {
+        div[data-testid="stButton"] button:hover {
             background: #5a1a6b !important;
         }
-        div[data-testid="stFormSubmitButton"] button * {
+        div[data-testid="stButton"] button * {
             color: #ffffff !important;
         }
         </style>
@@ -992,16 +992,17 @@ def _validar_acceso():
                 </p>
     """, unsafe_allow_html=True)
 
-    # El formulario evita que el campo muestre instrucciones incómodas y permite entrar con Enter.
-    with st.form("login_form", clear_on_submit=False):
-        st.markdown('<div class="login-label">Contraseña de acceso</div>', unsafe_allow_html=True)
-        clave_ingresada = st.text_input(
-            "Contraseña de acceso",
-            type="password",
-            placeholder="Escribe la contraseña",
-            label_visibility="collapsed"
-        )
-        entrar = st.form_submit_button("Entrar", use_container_width=True)
+    # Pantalla de acceso sin st.form para evitar el aviso de Streamlit:
+    # “Missing Submit Button”. El botón valida la contraseña.
+    st.markdown('<div class="login-label">Contraseña de acceso</div>', unsafe_allow_html=True)
+    clave_ingresada = st.text_input(
+        "Contraseña de acceso",
+        type="password",
+        placeholder="Escribe la contraseña",
+        label_visibility="collapsed",
+        key="clave_login"
+    )
+    entrar = st.button("Entrar", use_container_width=True)
 
     st.markdown("""
             </div>
@@ -1219,11 +1220,11 @@ def main():
         aviso_total = res.get("aviso_total")
         if aviso_total:
             pedidos_oficiales, compras_oficiales, pedidos_extraidos, total_extraido, linea_total = aviso_total
+            diferencia = total_extraido - compras_oficiales
+            signo = "+" if diferencia > 0 else ""
             st.warning(
-                "⚠️ El PDF original trae una diferencia en el total: "
-                f"total oficial ${compras_oficiales:,} con {pedidos_oficiales} pedidos, "
-                f"pero la suma de las filas extraídas da ${total_extraido:,} con {pedidos_extraidos} pedidos. "
-                "El reporte conserva la suma por asociada para que puedas revisar de dónde sale la diferencia."
+                f"⚠️ Diferencia de total: PDF ${compras_oficiales:,} vs suma ${total_extraido:,} "
+                f"({signo}${diferencia:,}). Se conserva la suma por asociada."
             )
 
         st.success(f"✅ Procesado: {len(filas)} asociados. "
@@ -1255,8 +1256,10 @@ def main():
                         pass
                     st.success("Hoja creada ✅")
                 except ModuleNotFoundError:
-                    st.error("Faltan librerías. Instala con:\n\n"
-                             "pip install gspread google-auth-oauthlib")
+                    st.error(
+                        "Google Sheets no está disponible porque faltan dependencias. "
+                        "Revisa que requirements.txt esté actualizado y reinicia/despliega de nuevo la app."
+                    )
                 except Exception as e:
                     st.error(f"No se pudo crear la hoja: {e}")
                     import traceback
